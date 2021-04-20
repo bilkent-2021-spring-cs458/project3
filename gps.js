@@ -172,6 +172,7 @@ function showDistanceToCity(mode) {
     }
 }
 
+// Shows the distance to a nearest city
 function showDistanceToCityHelper(pos) {
     const geocoder = new google.maps.Geocoder();
     const InfoWindow = new google.maps.InfoWindow();
@@ -207,6 +208,7 @@ function showDistanceToCityHelper(pos) {
     });
 }
 
+// Calculates distance to the center of the given city.
 function getCityCenter(city, pos) {
     var lat = city.location.lat();
     var lng = city.location.lng();
@@ -231,6 +233,8 @@ function getCityCenter(city, pos) {
         distance +
         " km</b>.";
 }
+
+// Shows distance to the center of the world
 function showWorldDistance(mode) {
     clearLocations();
     var info = document.getElementById("info");
@@ -255,13 +259,13 @@ function showWorldDistance(mode) {
             return;
         }
 
-        // var myLatlng = new google.maps.LatLng(pos);
         showWorldDistanceHelper(pos);
     } else {
         handleLocationError(false, infoWindow);
     }
 }
 
+// Shows distance to the center of the world
 function showWorldDistanceHelper(pos) {
     var marker = new google.maps.Marker({
         map: map,
