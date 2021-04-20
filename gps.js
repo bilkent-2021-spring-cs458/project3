@@ -1,6 +1,7 @@
 var map;
 var markedLocations = [];
 
+// Initialize the map
 function initMap() {
     map = new google.maps.Map(document.getElementById("map"), {
         zoom: 4,
@@ -83,7 +84,7 @@ function showCoord() {
                 city = city.address_components[0].long_name;
                 info.innerHTML = 'Your city is <b id="result">' + city + "</b>";
 
-                var myLatlng = new google.maps.LatLng(lat, lng);
+                var myLatlng = new google.maps.LatLng(pos);
                 var marker = new google.maps.Marker({
                     position: myLatlng,
                     map: map,
@@ -143,6 +144,7 @@ function distanceInKmBetweenEarthCoordinates(lat1, lon1, lat2, lon2) {
     return earthRadiusKm * c;
 }
 
+// Shows the distance to a nearest city
 function showDistanceToCity(mode) {
     clearLocations();
 
@@ -229,35 +231,6 @@ function getCityCenter(city, pos) {
         distance +
         " km</b>.";
 }
-
-function showWorldDistanceHelper(latLng) {
-    var marker = new google.maps.Marker({
-        map: map,
-        position: latLng,
-    });
-    markedLocations.push(marker);
-
-    var marker2 = new google.maps.Marker({
-        map: map,
-        position: { lat: 40.52, lng: 34.34 },
-    });
-    map.setCenter({ lat: 40.52, lng: 34.34 });
-    markedLocations.push(marker2);
-
-    var distance = distanceInKmBetweenEarthCoordinates(
-        pos.lat,
-        pos.lng,
-        40.52,
-        34.34
-    );
-
-    var info = document.getElementById("info");
-    info.innerHTML =
-        'Your distance to the world center is <b id="result">' +
-        distance +
-        " km</b>.";
-}
-
 function showWorldDistance(mode) {
     clearLocations();
     var info = document.getElementById("info");
@@ -282,9 +255,37 @@ function showWorldDistance(mode) {
             return;
         }
 
-        var myLatlng = new google.maps.LatLng(pos);
-        showWorldDistanceHelper(myLatlng);
+        // var myLatlng = new google.maps.LatLng(pos);
+        showWorldDistanceHelper(pos);
     } else {
         handleLocationError(false, infoWindow);
     }
+}
+
+function showWorldDistanceHelper(pos) {
+    var marker = new google.maps.Marker({
+        map: map,
+        position: pos,
+    });
+    markedLocations.push(marker);
+
+    var marker2 = new google.maps.Marker({
+        map: map,
+        position: { lat: 40.52, lng: 34.34 },
+    });
+    map.setCenter({ lat: 40.52, lng: 34.34 });
+    markedLocations.push(marker2);
+
+    var distance = distanceInKmBetweenEarthCoordinates(
+        pos.lat,
+        pos.lng,
+        40.52,
+        34.34
+    );
+
+    var info = document.getElementById("info");
+    info.innerHTML =
+        'Your distance to the world center is <b id="result">' +
+        distance +
+        " km</b>.";
 }
