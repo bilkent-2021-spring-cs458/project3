@@ -1,0 +1,47 @@
+[
+  {
+    "latitude": "42.213",
+    "longitude": "46",
+    "expected_result": "990.2507656353794 km"
+  },
+  {
+    "latitude": "121",
+    "longitude": "44.213123",
+    "expected_result": "fail"
+  },
+  {
+    "latitude": "Ahdsj",
+    "longitude": "hasdads",
+    "expected_result": "fail"
+  },
+  {
+    "latitude": "udisaasd",
+    "longitude": "81.12",
+    "expected_result": "fail"
+  },
+  {
+    "latitude": "21.2131",
+    "longitude": "44.213123",
+    "expected_result": "2340.6832695715457 km"
+  },
+  {
+    "latitude": "48.856613",
+    "longitude": "asdg",
+    "expected_result": "fail"
+  },
+  {
+    "latitude": "18*@",
+    "longitude": "2.352",
+    "expected_result": "fail"
+  },
+  {
+    "latitude": "",
+    "longitude": "",
+    "expected_result": "fail"
+  },
+  {
+    "latitude": "18.21",
+    "longitude": "",
+    "expected_result": "fail"
+  }
+]
