@@ -134,12 +134,49 @@
           });
         }
 
+        function inrange(min,number,max){
+          if ( (!isNaN(number)) && (number >= min) && (number <= max) ){
+              return true;
+          } else {
+              return false;
+          }
+        }
+/*
+        function setCookie(cname, cvalue) {
+          document.cookie = cname + "=" + cvalue;
+        }
+
+        function getCookie(cname) {
+          var name = cname + "=";
+          var decodedCookie = decodeURIComponent(document.cookie);
+          var ca = decodedCookie.split(';');
+          for(var i = 0; i <ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+              c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+              return c.substring(name.length, c.length);
+            }
+          }
+          return "";
+        }
+
+        function checkCookie() {
+          var gpsAccess = getCookie("gps");
+          if (gpsAccess != false) {
+            return true;
+          } else {
+            return getCookie("gps");
+          }
+        }
+*/
         function markLocation(lat, lng){
-          if(lng == "" || lat == "" || isNaN(lng) || isNaN(lng) ){
-            alert("Please enter numeric values between [-180, 180].");
+          if(!inrange(-90, lat, 90) || !inrange(-180, lng, 180)){
+            alert("Please enter numeric values between [-180, 180] for Longitude and [-90, 90] for Latitude.");
             return;
           }
-            var city = "";
+            var city = "InvalidIndexError";
             var myLatlng = new google.maps.LatLng(lat,lng);
             var marker = new google.maps.Marker({
                 position: myLatlng,
@@ -153,9 +190,18 @@
                 geocoder.geocode({ location: pos }, (results, status) => {
                 if (status === "OK") {
                   if (results[0]) {
-                    infowindow.setContent(results[0].formatted_address);
-                    var length = results[0].address_components.length;
-                    city = results[0].address_components[length - 3].long_name;
+                    //infoWindow.setContent(results[0].formatted_address);
+                    var cityIndex = -1;
+                    for (let index = 0; index < results.length; index++) {
+                      if(results[index].types[0] == "administrative_area_level_1")
+                      { 
+                        cityIndex = index;
+                        break;
+                      }
+                    }
+                    city = results[cityIndex].address_components[0].long_name;
+                    var info = document.getElementById('textA');
+                    info.innerText = "Your city is " + city;
                   } else {
                     window.alert("No results found");
                   }
@@ -163,9 +209,6 @@
                   window.alert("Geocoder failed due to: " + status);
                 }
               });
-            var info = document.getElementById('textA');
-            info.innerText = "Your city is " + city;
-
         }
         function showCoord(){
             var lng = document.getElementById('lngInput').value
@@ -212,7 +255,7 @@
         function showDistanceToCity(mode){
           clearLocations();
           const geocoder = new google.maps.Geocoder();
-          const infowindow = new google.maps.InfoWindow();
+          const InfoWindow = new google.maps.InfoWindow();
           var city = ""
           if (navigator.geolocation && mode == 'auto') {
             navigator.geolocation.getCurrentPosition(
@@ -227,9 +270,13 @@
                         position: results[0].geometry.location
                     });
                     markedLocations.push(marker);
-                    infowindow.setContent(results[0].formatted_address);
-                    var length = results[0].address_components.length;
-                    city = results[0].address_components[length - 3].long_name;
+                    InfoWindow.setContent(results[0].formatted_address);
+                    var cityIndex = -1;
+                    for (let index = 0; index < results.length; index++) {
+                      if(results[index].types[0] == "administrative_area_level_1")
+                        cityIndex = index;
+                    }
+                    city = results[cityIndex].address_components[0].long_name;
                     getCityCenter(city);
                   } else {
                     window.alert("No results found");
@@ -245,8 +292,8 @@
           else if( mode === "manual"){
             var lng = document.getElementById('lngInputCity').value
             var lat = document.getElementById('latInputCity').value
-            if(lng == "" || lat == "" || isNaN(lng) || isNaN(lng) ){
-                alert("Please enter numeric values between [-180, 180].");
+            if(inrange(-90, lat, 90) && inrange(-180, lng, 180)){
+                alert("Please enter numeric values between [-180, 180] for Longitude and [-90, 90] for Latitude.");
                 return;
             }
             pos = {lat: parseFloat(lat),lng: parseFloat(lng)};
@@ -259,7 +306,7 @@
                         position: results[0].geometry.location
                     });
                     markedLocations.push(marker);
-                    infowindow.setContent(results[0].formatted_address);
+                    InfoWindow.setContent(results[0].formatted_address);
                     var length = results[0].address_components.length;
                     city = results[0].address_components[length - 3].long_name;
                     getCityCenter(city);
@@ -321,19 +368,19 @@
                 markedLocations.push(marker)
                 var marker2 = new google.maps.Marker({
                     map: map,
-                    position: {lat: 39, lng: 34}
+                    position: {lat: 40.52, lng: 34.34}
                 });
-                map.setCenter({lat: 39, lng: 34});
+                map.setCenter({lat: 40.52, lng: 34.34});
                 markedLocations.push(marker2)
-                var distance = distanceInKmBetweenEarthCoordinates(pos.lat, pos.lng, 39,34);
+                var distance = distanceInKmBetweenEarthCoordinates(pos.lat, pos.lng, 40.52,34.34);
                 var info = document.getElementById('distanceText');
                 info.innerText = "Your distance to the world center is " + distance + "km.";
               },
               () => {handleLocationError(true, infoWindow, map.getCenter()); }
             );
           } else if( mode === "manual"){
-				if(lng == "" || lat == "" || isNaN(lng) || isNaN(lng) ){
-					alert("Please enter numeric values between [-180, 180].");
+				if(inrange(-90, lat, 90) && inrange(-180, lng, 180)){
+					alert("Please enter numeric values between [-180, 180] for Longitude and [-90, 90] for Latitude.");
 					return;
           }
             var myLatlng = new google.maps.LatLng(lat,lng);
@@ -344,11 +391,11 @@
                 markedLocations.push(marker)
                 var marker2 = new google.maps.Marker({
                     map: map,
-                    position: {lat: 39, lng: 34}
+                    position: {lat: 40.52, lng: 34.34}
                 });
-                map.setCenter({lat: 39, lng: 34});
+                map.setCenter({lat: 40.52, lng: 34.34});
                 markedLocations.push(marker2)
-                var distance = distanceInKmBetweenEarthCoordinates(lat, lng, 39,34);
+                var distance = distanceInKmBetweenEarthCoordinates(lat, lng, 40.52,34.34);
                 var info = document.getElementById('distanceText');
                 info.innerText = "Your distance to the world center is " + distance + "km.";
           }
@@ -357,6 +404,8 @@
           }
           
         }
+
+        
       </script>
 
 
