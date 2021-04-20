@@ -168,7 +168,7 @@
 		}
 
 		function inrange(min, number, max) {
-			if ((!isNaN(number)) && (number >= min) && (number <= max)) {
+			if ((!isNaN(number)) && number != '' && (number >= min) && (number <= max)) {
 				return true;
 			} else {
 				return false;
@@ -240,7 +240,7 @@
 						}
 
 						var info = document.getElementById('textA');
-						info.innerText = "Your city is <b id=\"result\">" + city + "</b>";
+						info.innerHTML = "Your city is <b id=\"result\">" + city + "</b>";
 
 						var myLatlng = new google.maps.LatLng(lat, lng);
 						var marker = new google.maps.Marker({
