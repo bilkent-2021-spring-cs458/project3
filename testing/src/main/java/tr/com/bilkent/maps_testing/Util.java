@@ -11,7 +11,8 @@ public final class Util {
 	/**
 	 * The home page URL of the website
 	 */
-	public static final String BASE_URL = "file:///C:/Javid/CS/CS458/Project3/index.html";
+	public static final String BASE_URL = "https://bilkent-2021-spring-cs458.github.io/project3"
+			+ "";
 
 	private Util() {
 	}
